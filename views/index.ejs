@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Blog</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.3) 0%, transparent 50%);
+      pointer-events: none;
+      animation: moveGradient 15s ease infinite;
+    }
+
+    @keyframes moveGradient {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      animation: slideDown 0.5s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+      width: 80%;
+    }
+
+    .nav-link:hover {
+      color: #667eea !important;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-secondary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white !important;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-outline-secondary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    .btn-outline-secondary:hover::before {
+      left: 0;
+    }
+
+    .btn-outline-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .heading {
+      color: white;
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin-top: 3rem;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 0.8s ease;
+      background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h5 {
+      color: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 400;
+      font-size: 1.2rem;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    .icon-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 3rem auto;
+      animation: fadeInUp 0.8s ease 0.4s backwards;
+    }
+
+    .icon-container svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.3));
+    }
+
+    .icon-default {
+      opacity: 1;
+      color: white;
+    }
+
+    .icon-hover {
+      opacity: 0;
+      color: #ffd700;
+      transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
+    }
+
+    .icon-container:hover .icon-default {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8) rotate(-10deg);
+    }
+
+    .icon-container:hover .icon-hover {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.2) rotate(0deg);
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      padding: 3rem 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+      animation: fadeInUp 0.8s ease 0.6s backwards;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      height: auto !important;
+      min-height: 250px;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-body {
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-body svg {
+      color: #667eea;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover .card-body svg {
+      transform: scale(1.2) rotate(5deg);
+      color: #764ba2;
+    }
+
+    .card-title {
+      color: #2d3748;
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin: 1rem 0;
+      transition: color 0.3s ease;
+    }
+
+    .card:hover .card-title {
+      color: #667eea;
+    }
+
+    .card-text {
+      color: #4a5568;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .primary {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      position: relative;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .primary::after {
+      content: '→';
+      margin-left: 5px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .primary:hover {
+      color: #764ba2;
+    }
+
+    .primary:hover::after {
+      margin-left: 10px;
+    }
+
+    .form-control {
+      border-radius: 25px;
+      border: 2px solid rgba(102, 126, 234, 0.3);
+      padding: 0.5rem 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      outline: none;
+    }
+
+    @media (max-width: 768px) {
+      .card-container {
+        grid-template-columns: 1fr;
+        padding: 2rem 1rem;
+      }
+      
+      .heading {
+        font-size: 2.5rem;
+      }
+
+      .btn-outline-secondary {
+        width: 100% !important;
+        margin-left: 0 !important;
+      }
+    }
+
+    .empty-state-btn {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* Floating particles effect */
+    .particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 10s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(50px);
+        opacity: 0;
+      }
+    }
+    .blog-container {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.blog-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  padding: 2.8rem 3rem;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.blog-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.blog-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.35);
+}
+
+.blog-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.blog-excerpt {
+  color: #4a5568;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.blog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.blog-meta {
+  font-size: 0.9rem;
+  color: #718096;
+}
+
+.read-more {
+  font-weight: 700;
+  text-decoration: none;
+  color: #667eea;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.read-more::after {
+  content: '→';
+  margin-left: 6px;
+  transition: margin-left 0.3s ease;
+}
+
+.read-more:hover {
+  color: #764ba2;
+}
+
+.read-more:hover::after {
+  margin-left: 12px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .blog-card {
+    padding: 2rem 1.8rem;
+  }
+
+  .blog-title {
+    font-size: 1.6rem;
+  }
+
+  .blog-excerpt {
+    font-size: 1.05rem;
+  }
+}
+
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+</head>
+<body>
+  <!-- Floating particles -->
+  <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+  <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+  <div class="particle" style="left: 70%; animation-delay: 6s;"></div>
+  <div class="particle" style="left: 90%; animation-delay: 8s;"></div>
+
+  <header class="p-3 mb-3">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="#" class="nav-link px-3 link-secondary" style="font-weight: 600;">BLOGS</a></li>
+          <li><a href="#" class="nav-link px-3 link-body-emphasis">Add Posts</a></li>
+          <li><a href="#" class="nav-link px-3 link-body-emphasis">Own Post</a></li>
+          <li><a href="#" class="nav-link px-3 link-body-emphasis">Remove Post</a></li>
+        </ul>
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+        </form>
+        <div class="text-end">
+          <a href="/logout" class="btn btn-outline-secondary" style="width:120px; height:45px; line-height:30px;">
+  Sign Out
+</a>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <h1 class="heading">Your Blog Feed</h1>
+  <h5>Discover your thoughts and stories all in one place.</h5>
+
+  <!-- Demo: No posts state -->
+  <div class="icon-container">
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-collection icon-default" viewBox="0 0 16 16">
+      <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"/>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-collection-fill icon-hover" viewBox="0 0 16 16">
+      <path d="M0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zM2 3a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 0-1h-11A.5.5 0 0 0 2 3m2-2a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7A.5.5 0 0 0 4 1"/>
+    </svg>
+  </div>
+
+  <h5 style="margin-bottom: 2rem;">Click the button below to create your first blog</h5>
+
+  <div style="text-align: center; margin-bottom: 3rem;">
+    <a href="/new">
+      <button type="button" class="btn btn-outline-secondary empty-state-btn" style="width: 300px; height: 60px; font-size: 1.1rem;">
+        Create New Blog
+      </button>
+    </a>
+  </div>
+
+  <div class="blog-container">
+  <% posts.forEach(post => { %>
+    <article class="blog-card">
+      
+      <h2 class="blog-title"><%= post.title %></h2>
+
+      <p class="blog-excerpt">
+        <%= post.content.length > 220 
+          ? post.content.substring(0,220) + "..." 
+          : post.content %>
+      </p>
+
+      <div class="blog-footer">
+        <span class="blog-meta">🕒 Just now</span>
+        <a href="/posts/<%= post.id %>" class="read-more">
+          Continue Reading →
+        </a>
+      </div>
+
+    </article>
+  <% }) %>
+</div>
+
+
+
+      
+
+  <div style="margin-top: 5rem;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
